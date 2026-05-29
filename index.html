@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Портфоліо · Сайти + Telegram-боти для бізнесу</title>
+<meta name="description" content="Приклади лендингів та ботів запису для б'юті, масажу, кондитерів і квіткових студій.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0e0d12; --bg2:#16141d; --card:#1b1922; --line:#2c2935;
+    --txt:#f3f0ea; --mut:#a39fb0; --acc:#c8a86a; --acc2:#8a78d6;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg); color:var(--txt); line-height:1.55;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* animated aurora background */
+  .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .aurora span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.45}
+  .aurora .a1{width:48vw;height:48vw;background:#6d5bd0;top:-12vw;left:-10vw;animation:drift1 22s ease-in-out infinite}
+  .aurora .a2{width:42vw;height:42vw;background:#b98a3e;bottom:-14vw;right:-8vw;animation:drift2 26s ease-in-out infinite}
+  .aurora .a3{width:34vw;height:34vw;background:#3a6f63;top:38vh;left:46vw;animation:drift1 30s ease-in-out infinite reverse}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6vw,5vh) scale(1.12)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-7vw,-4vh) scale(1.08)}}
+
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 22px}
+
+  header{padding:84px 0 26px;text-align:center}
+  .eyebrow{
+    display:inline-block;font-size:13px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--acc);border:1px solid var(--line);padding:7px 16px;border-radius:30px;
+    margin-bottom:26px;opacity:0;animation:rise .8s .05s forwards
+  }
+  h1{
+    font-size:clamp(34px,6vw,62px);line-height:1.05;font-weight:800;letter-spacing:-.02em;
+    opacity:0;animation:rise .8s .15s forwards
+  }
+  h1 .grad{background:linear-gradient(100deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{
+    max-width:620px;margin:22px auto 0;color:var(--mut);font-size:clamp(15px,2.4vw,18px);
+    opacity:0;animation:rise .8s .28s forwards
+  }
+  .stats{
+    display:flex;gap:36px;justify-content:center;flex-wrap:wrap;margin:40px 0 8px;
+    opacity:0;animation:rise .8s .4s forwards
+  }
+  .stat b{display:block;font-size:30px;font-weight:800;color:var(--txt)}
+  .stat span{font-size:13px;color:var(--mut)}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+  .demo-note{
+    text-align:center;color:var(--mut);font-size:13.5px;margin:34px auto 56px;max-width:640px;
+    background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 18px
+  }
+  .demo-note b{color:var(--acc)}
+
+  section{padding:14px 0 70px}
+  .sec-title{display:flex;align-items:center;gap:14px;margin:0 0 26px;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+  .sec-title::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+
+  .card{
+    position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;
+    overflow:hidden;display:flex;flex-direction:column;
+    opacity:0;transform:translateY(34px);transition:transform .65s cubic-bezier(.2,.7,.2,1),opacity .65s,border-color .3s,box-shadow .3s
+  }
+  .card.in{opacity:1;transform:translateY(0)}
+  .card:hover{border-color:var(--acc);box-shadow:0 24px 60px -28px rgba(0,0,0,.8);transform:translateY(-6px)}
+  .thumb{
+    height:152px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+    font-size:54px;transition:transform .6s ease
+  }
+  .card:hover .thumb{transform:scale(1.06)}
+  .thumb.nail{background:linear-gradient(135deg,#e8d6c2,#caa07d)}
+  .thumb.derma{background:linear-gradient(135deg,#9fb3a3,#bf6a45)}
+  .thumb.massage{background:linear-gradient(135deg,#1d3b32,#d8a96b)}
+  .thumb.cake{background:linear-gradient(135deg,#f5d9e3,#c98aa6)}
+  .thumb.flowers{background:linear-gradient(135deg,#f1ddd8,#8a5868)}
+  .badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+    color:#fff;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:30px}
+  .body{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
+  .niche{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+  .body h3{font-size:21px;font-weight:700;letter-spacing:-.01em}
+  .body p{color:var(--mut);font-size:14px;margin:8px 0 18px;flex:1}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+  .tag{font-size:11.5px;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
+  .actions{display:flex;gap:10px}
+  .btn{
+    flex:1;text-align:center;padding:11px 14px;border-radius:11px;font-size:14px;font-weight:600;
+    transition:transform .15s,background .2s,border-color .2s
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.open{background:linear-gradient(100deg,var(--acc),#d8b97c);color:#1a1712}
+  .btn.copy{background:transparent;border:1px solid var(--line);color:var(--txt)}
+  .btn.copy:hover{border-color:var(--acc)}
+  .btn.copy.done{border-color:#5cba7d;color:#5cba7d}
+
+  footer{border-top:1px solid var(--line);padding:34px 0 64px;text-align:center;color:var(--mut);font-size:13.5px}
+  footer a{color:var(--acc)}
+
+  @media(max-width:560px){header{padding:60px 0 18px}.stats{gap:26px}}
+</style>
+</head>
+<body>
+<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Портфоліо · приклади робіт</div>
+    <h1>Сайти та <span class="grad">Telegram-боти</span><br>для малого бізнесу</h1>
+    <p class="lead">Лендинги з онлайн-записом та замовленням, і боти запису просто в Telegram. Кожен приклад — окремий дизайн під свою нішу. Натисніть «Відкрити», щоб подивитись наживо.</p>
+    <div class="stats">
+      <div class="stat"><b>5</b><span>готових прикладів</span></div>
+      <div class="stat"><b>100%</b><span>адаптив (моб. + ПК)</span></div>
+      <div class="stat"><b>24/7</b><span>демо-бот онлайн</span></div>
+    </div>
+  </header>
+
+  <div class="demo-note">🟡 Це <b>демо-приклади</b> для портфоліо. Записи й замовлення нікуди не зберігаються — кнопка лише відкриває Telegram з готовим повідомленням. Під клієнта все налаштовується індивідуально.</div>
+
+  <section>
+    <div class="sec-title">Лендинг + онлайн-запис</div>
+    <div class="grid" id="grid-booking"></div>
+  </section>
+
+  <section>
+    <div class="sec-title">Лендинг + замовлення</div>
+    <div class="grid" id="grid-order"></div>
+  </section>
+
+  <section>
+    <div class="sec-title">Бот запису в Telegram</div>
+    <div class="grid" id="grid-bot"></div>
+  </section>
+
+  <footer>
+    Зроблено вручну · кожен сайт унікальний і з плавними анімаціями.<br>
+    Хочете такий самий для свого бізнесу — напишіть у <a href="https://t.me/" id="contact-tg">Telegram</a>.
+  </footer>
+</div>
+
+<script>
+// base path works both on GitHub Pages (/demos/) and locally
+const BASE = location.pathname.replace(/index\.html?$/,'').replace(/\/$/,'');
+const ORIGIN = location.origin + BASE;
+
+const SITES = {
+  booking:[
+    {folder:'nail-demo',icon:'💅',cls:'nail',niche:'Манікюр · нейл-студія',name:'Iris Beauty Space',
+     desc:'Запис на манікюр/педикюр: вибір кількох послуг, день, вільний час, підсумок ціни.',
+     tags:['Мультивибір послуг','Слоти часу','Підсумок ціни']},
+    {folder:'cosmetolog-demo',icon:'✨',cls:'derma',niche:'Косметолог · дерма-естетика',name:'Derma Studio',
+     desc:'Запис до косметолога: картки процедур, календар робочих днів і доступний час.',
+     tags:['Картки процедур','Календар','Робочі дні']},
+    {folder:'massage-demo',icon:'🌿',cls:'massage',niche:'Студія масажу',name:'Calm',
+     desc:'Темний spa-дизайн: один вид масажу → тривалість зі своєю ціною → дата й час.',
+     tags:['Тривалість + ціна','Spa-настрій','Адаптив']},
+  ],
+  order:[
+    {folder:'cake-demo',icon:'🎂',cls:'cake',niche:'Торти на замовлення',name:'Tort Vladimirovna',
+     desc:'Кондитерська: каталог тортів, конструктор замовлення та заявка в Telegram.',
+     tags:['Каталог','Замовлення','Заявка в TG']},
+    {folder:'flowers-demo',icon:'💐',cls:'flowers',niche:'Студія квітів',name:'Petal',
+     desc:'Замовлення букета: каталог, розмір, дата й вікно доставки, дані отримувача.',
+     tags:['Доставка','Анімації','Дані отримувача']},
+  ],
+  bot:[
+    {folder:null,icon:'🤖',cls:'nail',niche:'Telegram-бот запису',name:'@demonail_studio_bot',
+     link:'https://t.me/demonail_studio_bot',
+     desc:'Робочий демо-бот запису просто в чаті: послуги, день, час, підтвердження. Працює 24/7.',
+     tags:['Онлайн 24/7','Inline-кнопки','Без сайту']},
+  ]
+};
+
+function cardHTML(s){
+  const live = s.link ? s.link : ORIGIN + '/' + s.folder + '/';
+  const openLabel = s.link ? 'Відкрити в Telegram' : 'Відкрити';
+  return `<article class="card">
+    <div class="thumb ${s.cls}"><span class="badge">Демо</span>${s.icon}</div>
+    <div class="body">
+      <div class="niche">${s.niche}</div>
+      <h3>${s.name}</h3>
+      <p>${s.desc}</p>
+      <div class="tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="actions">
+        <a class="btn open" href="${live}" target="_blank" rel="noopener">${openLabel}</a>
+        <button class="btn copy" data-url="${live}">Копіювати</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+document.getElementById('grid-booking').innerHTML = SITES.booking.map(cardHTML).join('');
+document.getElementById('grid-order').innerHTML   = SITES.order.map(cardHTML).join('');
+document.getElementById('grid-bot').innerHTML     = SITES.bot.map(cardHTML).join('');
+
+// copy-link
+document.addEventListener('click', e=>{
+  const b = e.target.closest('.btn.copy'); if(!b) return;
+  navigator.clipboard.writeText(b.dataset.url).then(()=>{
+    const old=b.textContent; b.textContent='Скопійовано ✓'; b.classList.add('done');
+    setTimeout(()=>{b.textContent=old;b.classList.remove('done');},1600);
+  });
+});
+
+// scroll-reveal stagger
+const io = new IntersectionObserver((ents)=>{
+  ents.forEach((en,i)=>{ if(en.isIntersecting){ const el=en.target;
+    setTimeout(()=>el.classList.add('in'), (el.dataset.d||0)*90); io.unobserve(el);} });
+},{threshold:.15});
+document.querySelectorAll('.card').forEach((c,i)=>{c.dataset.d=i%3;io.observe(c);});
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#243029">
+<title>Дерма-естетика · Онлайн-запис</title>
+
+<meta property="og:title" content="Кабінет естетичної косметології · Онлайн-запис">
+<meta property="og:description" content="Чистка, пілінги, мезотерапія, доглядові процедури. Зручний онлайн-запис за 30 секунд.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&q=80">
+<meta property="og:type" content="website">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E🌿%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!--
+  НАЛАШТУВАННЯ ПІД КЛІЄНТА — лише блок CONFIG нижче:
+  1. telegram      — @username косметолога (без @)
+  2. businessName  — назва кабінету / ім'я майстра
+  3. tagline       — короткий підпис
+  4. city          — місто
+  5. heroImage     — URL фото кабінету/робіт
+  6. services      — послуги: ціна (грн) + тривалість (хв) + опис
+  7. workHours     — робочі години для слотів
+  8. workDays      — робочі дні (0=нд … 6=сб)
+-->
+<script>
+const CONFIG = {
+  telegram: "derma_studio_demo",
+  businessName: "Derma Studio",
+  tagline: "Кабінет естетичної косметології",
+  city: "Львів",
+  heroImage: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1100&q=80",
+  services: {
+    "Комбінована чистка обличчя": { price: 800,  min: 90,  desc: "Глибоке очищення + заспокійливий догляд" },
+    "Серединний пілінг":          { price: 950,  min: 60,  desc: "Оновлення та сяйво шкіри" },
+    "Мезотерапія обличчя":        { price: 1200, min: 60,  desc: "Зволоження й насичення коктейлем" },
+    "Біоревіталізація":           { price: 1800, min: 60,  desc: "Гіалуронова кислота, глибоке зволоження" },
+    "Карбоксітерапія":            { price: 700,  min: 45,  desc: "СО₂-догляд проти тьмяності" },
+    "Масаж обличчя (буккальний)": { price: 600,  min: 60,  desc: "Ліфтинг і тонус без ін'єкцій" }
+  },
+  workHours: { from: 10, to: 20 },
+  slotStepMin: 60,
+  workDays: [1, 2, 3, 4, 5]          // пн–пт
+};
+</script>
+
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --ink:#243029;
+  --ink-soft:#3c4d44;
+  --sage:#7c9082;
+  --sage-soft:#dfe6df;
+  --cream:#f4f1ea;
+  --cream-2:#eee9df;
+  --paper:#ffffff;
+  --terra:#bf6a45;
+  --terra-soft:#f0dccf;
+  --muted:#8a958d;
+  --line:#e3ddd1;
+  --shadow:0 18px 50px -24px rgba(36,48,41,.35);
+  --shadow-sm:0 6px 18px -10px rgba(36,48,41,.30);
+  --r:18px;
+}
+
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Inter',sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.serif { font-family:'Fraunces',serif; font-weight:500; letter-spacing:-.01em; }
+.wrap { width:min(1120px,92%); margin:0 auto; }
+
+/* DEMO стрічка */
+.demo-bar {
+  background:var(--ink); color:#e9efe9; text-align:center;
+  font-size:13px; letter-spacing:.04em; padding:7px 12px;
+}
+.demo-bar b { color:#f1c9a8; }
+
+/* Хедер */
+header {
+  position:sticky; top:0; z-index:50;
+  background:rgba(244,241,234,.82); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav { display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+.brand { display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-size:20px; }
+.brand .dot { width:30px; height:30px; border-radius:50%; background:var(--sage); display:grid; place-items:center; font-size:15px; }
+.nav-links { display:flex; gap:26px; font-size:14px; }
+.nav-links a { color:var(--ink-soft); text-decoration:none; }
+.nav-links a:hover { color:var(--ink); }
+.btn {
+  font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
+  border:none; cursor:pointer; border-radius:999px; padding:11px 22px;
+  background:var(--ink); color:#fff; text-decoration:none; display:inline-block;
+  transition:transform .15s, box-shadow .15s, opacity .15s;
+}
+.btn:hover { transform:translateY(-1px); box-shadow:var(--shadow-sm); }
+.btn-terra { background:var(--terra); }
+.btn-ghost { background:transparent; color:var(--ink); border:1px solid var(--ink); }
+.btn[disabled] { opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* Герой */
+.hero { display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center; padding:64px 0 56px; }
+.eyebrow { font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:var(--sage); margin-bottom:18px; }
+.hero h1 { font-family:'Fraunces',serif; font-weight:500; font-size:clamp(34px,5vw,56px); line-height:1.08; letter-spacing:-.02em; }
+.hero h1 em { font-style:italic; color:var(--terra); }
+.hero p.lead { color:var(--ink-soft); font-size:17px; margin:22px 0 30px; max-width:46ch; }
+.hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
+.hero-figure { position:relative; }
+.hero-figure img { width:100%; height:480px; object-fit:cover; border-radius:26px; box-shadow:var(--shadow); }
+.float-card {
+  position:absolute; left:-22px; bottom:28px;
+  background:var(--paper); border-radius:16px; padding:14px 18px;
+  box-shadow:var(--shadow); display:flex; align-items:center; gap:12px; max-width:230px;
+}
+.float-card .ic { width:40px; height:40px; border-radius:12px; background:var(--terra-soft); display:grid; place-items:center; font-size:20px; }
+.float-card small { color:var(--muted); font-size:12px; }
+.float-card b { font-family:'Fraunces',serif; font-size:15px; }
+
+/* Секції */
+section.block { padding:52px 0; }
+.sec-head { max-width:60ch; margin-bottom:34px; }
+.sec-head .eyebrow { margin-bottom:12px; }
+.sec-head h2 { font-family:'Fraunces',serif; font-weight:500; font-size:clamp(26px,3.4vw,38px); line-height:1.12; }
+.sec-head p { color:var(--ink-soft); margin-top:12px; }
+
+/* Послуги (вибір картками) */
+.svc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.svc {
+  position:relative; background:var(--paper); border:1px solid var(--line);
+  border-radius:var(--r); padding:20px 20px 18px; cursor:pointer;
+  transition:border-color .15s, box-shadow .15s, transform .15s;
+}
+.svc:hover { box-shadow:var(--shadow-sm); transform:translateY(-2px); }
+.svc input { position:absolute; opacity:0; pointer-events:none; }
+.svc .check {
+  position:absolute; top:16px; right:16px; width:24px; height:24px; border-radius:50%;
+  border:1.5px solid var(--line); display:grid; place-items:center; color:#fff; font-size:13px; transition:.15s;
+}
+.svc.on { border-color:var(--sage); box-shadow:0 0 0 1px var(--sage); }
+.svc.on .check { background:var(--sage); border-color:var(--sage); }
+.svc h3 { font-family:'Fraunces',serif; font-weight:500; font-size:19px; padding-right:30px; }
+.svc .desc { color:var(--muted); font-size:13.5px; margin:6px 0 14px; min-height:38px; }
+.svc .meta { display:flex; align-items:baseline; justify-content:space-between; }
+.svc .price { font-family:'Fraunces',serif; font-size:20px; }
+.svc .dur { color:var(--sage); font-size:13px; }
+
+/* Чому ми */
+.why { background:var(--ink); color:#e9efe9; border-radius:28px; padding:46px; }
+.why .eyebrow { color:#a9c0ad; }
+.why h2 { color:#fff; }
+.why-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:28px; margin-top:30px; }
+.why-item .ic { font-size:26px; margin-bottom:10px; }
+.why-item h4 { font-family:'Fraunces',serif; font-weight:500; font-size:18px; margin-bottom:6px; }
+.why-item p { color:#b7c4ba; font-size:14px; }
+
+/* Бронювання */
+.book { background:var(--paper); border-radius:28px; padding:40px; box-shadow:var(--shadow); }
+.book-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:34px; }
+.field { margin-bottom:18px; }
+.field label { display:block; font-size:13px; font-weight:600; margin-bottom:7px; color:var(--ink-soft); }
+.field input, .field textarea {
+  width:100%; font-family:'Inter',sans-serif; font-size:15px; color:var(--ink);
+  background:var(--cream); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+}
+.field input:focus, .field textarea:focus { outline:none; border-color:var(--sage); }
+.field textarea { resize:vertical; min-height:64px; }
+
+.slot-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(78px,1fr)); gap:9px; }
+.slot { border:1px solid var(--line); background:var(--cream); border-radius:11px; padding:11px 6px; text-align:center; font-size:14px; cursor:pointer; transition:.12s; }
+.slot:hover { border-color:var(--sage); }
+.slot.selected { border-color:var(--terra); background:#fff; color:var(--terra); box-shadow:0 0 0 1px var(--terra); font-weight:600; }
+.slot.empty { grid-column:1/-1; color:var(--muted); font-size:13px; text-align:center; padding:10px; cursor:default; }
+
+.summary { background:var(--cream); border-radius:16px; padding:18px 20px; margin:6px 0 18px; }
+.summary .row { display:flex; justify-content:space-between; font-size:14px; padding:5px 0; color:var(--ink-soft); }
+.summary .row.total { border-top:1px dashed var(--line); margin-top:6px; padding-top:11px; font-family:'Fraunces',serif; font-size:18px; color:var(--ink); }
+.summary .empty { color:var(--muted); font-size:14px; }
+.book .btn { width:100%; padding:15px; font-size:15px; }
+.hint { font-size:12.5px; color:var(--muted); text-align:center; margin-top:10px; }
+
+footer { background:var(--ink); color:#cdd6cf; padding:44px 0; margin-top:24px; }
+.foot { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px; }
+.foot a { color:#f1c9a8; text-decoration:none; }
+.foot .serif { color:#fff; font-size:20px; }
+
+@media (max-width:880px){
+  .hero { grid-template-columns:1fr; gap:30px; padding:40px 0; }
+  .hero-figure img { height:340px; }
+  .float-card { left:12px; }
+  .book-grid { grid-template-columns:1fr; gap:24px; }
+  .why { padding:32px 24px; }
+  .nav-links { display:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">🌿 <b>ДЕМО-сторінка</b> — приклад сайту запису для косметолога. Реальні дані налаштовуються під вас.</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot">🌿</span><span id="brand-name">Derma Studio</span></div>
+    <nav class="nav-links">
+      <a href="#services">Послуги</a>
+      <a href="#why">Чому ми</a>
+      <a href="#book">Запис</a>
+    </nav>
+    <a href="#book" class="btn">Записатись</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow" id="hero-eyebrow">Кабінет естетичної косметології · Львів</div>
+      <h1 class="serif">Доглянута шкіра — <em>без зайвих питань</em> і дзвінків</h1>
+      <p class="lead">Оберіть процедуру й зручний час прямо тут. За 30 секунд ви отримаєте підтвердження у Telegram — без анкет і очікування на лінії.</p>
+      <div class="hero-cta">
+        <a href="#book" class="btn btn-terra">Обрати час →</a>
+        <a href="#services" class="btn btn-ghost">Дивитись послуги</a>
+      </div>
+    </div>
+    <div class="hero-figure">
+      <img id="hero-img" src="" alt="Кабінет косметології">
+      <div class="float-card">
+        <div class="ic">✶</div>
+        <div><b>500+ доглядів</b><br><small>delicate &amp; clinical підхід</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="services">
+    <div class="sec-head">
+      <div class="eyebrow">Послуги</div>
+      <h2 class="serif">Оберіть одну або кілька процедур</h2>
+      <p>Натисніть на картку, щоб додати до запису. Вартість і час порахуються автоматично.</p>
+    </div>
+    <div class="svc-grid" id="svc-grid"></div>
+  </section>
+
+  <section class="block" id="why">
+    <div class="why">
+      <div class="eyebrow">Чому обирають нас</div>
+      <h2 class="serif">Спокій, чистота, результат</h2>
+      <div class="why-grid">
+        <div class="why-item"><div class="ic">🧴</div><h4>Сертифіковані препарати</h4><p>Працюємо лише з перевіреними брендами та свіжими партіями.</p></div>
+        <div class="why-item"><div class="ic">🕐</div><h4>Без черг і дзвінків</h4><p>Запис онлайн, нагадування приходить у Telegram за день.</p></div>
+        <div class="why-item"><div class="ic">🤍</div><h4>Індивідуальний догляд</h4><p>Підбираємо процедуру під ваш тип шкіри, без шаблонів.</p></div>
+        <div class="why-item"><div class="ic">✦</div><h4>Стерильність</h4><p>Одноразові матеріали та повна обробка інструменту.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="book">
+    <div class="sec-head">
+      <div class="eyebrow">Запис</div>
+      <h2 class="serif">Заброньте зручний час</h2>
+    </div>
+    <div class="book">
+      <div class="book-grid">
+        <div>
+          <div class="field">
+            <label>Дата візиту</label>
+            <input type="date" id="date">
+          </div>
+          <div class="field">
+            <label>Вільний час</label>
+            <div class="slot-grid" id="slot-grid"><div class="slot empty">Спершу оберіть дату</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="field"><label>Ваше ім'я</label><input type="text" id="name" placeholder="Напр., Анна"></div>
+          <div class="field"><label>Телефон або @telegram</label><input type="text" id="contact" placeholder="+380… або @nickname"></div>
+          <div class="field"><label>Побажання (необов'язково)</label><textarea id="wishes" placeholder="Чутлива шкіра, алергії, побажання по часу…"></textarea></div>
+
+          <div class="summary" id="summary"><div class="empty">Оберіть послуги вище — тут зʼявиться підсумок.</div></div>
+          <button class="btn btn-terra" id="submit" disabled>Підтвердити запис у Telegram</button>
+          <div class="hint">Натиснувши кнопку, ви відкриєте чат із майстром із вже заповненим записом.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="serif" id="foot-name">Derma Studio</div>
+      <div style="font-size:14px;margin-top:4px;" id="foot-tagline">Кабінет естетичної косметології</div>
+    </div>
+    <div style="font-size:14px;">
+      Telegram: <a id="footer-tg" href="#">записатись</a> · <span id="foot-city">Львів</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ─── підставляємо CONFIG у текст ─── */
+document.getElementById('brand-name').textContent = CONFIG.businessName;
+document.getElementById('foot-name').textContent  = CONFIG.businessName;
+document.getElementById('foot-tagline').textContent = CONFIG.tagline;
+document.getElementById('foot-city').textContent  = CONFIG.city;
+document.getElementById('hero-eyebrow').textContent = CONFIG.tagline + ' · ' + CONFIG.city;
+document.getElementById('hero-img').src = CONFIG.heroImage;
+document.getElementById('footer-tg').href = 'https://t.me/' + CONFIG.telegram;
+document.title = CONFIG.businessName + ' · Онлайн-запис';
+
+const state = { services: [], date: '', time: '', name: '', contact: '', wishes: '' };
+
+/* ─── картки послуг ─── */
+const svcGrid = document.getElementById('svc-grid');
+Object.entries(CONFIG.services).forEach(([name, s]) => {
+  const el = document.createElement('label');
+  el.className = 'svc';
+  el.innerHTML = `
+    <input type="checkbox" value="${name}">
+    <span class="check">✓</span>
+    <h3>${name}</h3>
+    <div class="desc">${s.desc || ''}</div>
+    <div class="meta"><span class="price">${s.price} грн</span><span class="dur">~${fmtDur(s.min)}</span></div>`;
+  svcGrid.appendChild(el);
+});
+svcGrid.addEventListener('change', () => {
+  state.services = [...svcGrid.querySelectorAll('input:checked')].map(i => i.value);
+  svcGrid.querySelectorAll('.svc').forEach(c => c.classList.toggle('on', c.querySelector('input').checked));
+  update();
+});
+
+/* ─── дата / слоти ─── */
+const dateEl = document.getElementById('date');
+const today = new Date();
+dateEl.min = today.toISOString().split('T')[0];
+const maxD = new Date(); maxD.setDate(maxD.getDate() + 30);
+dateEl.max = maxD.toISOString().split('T')[0];
+
+const slotGrid = document.getElementById('slot-grid');
+function renderSlots() {
+  slotGrid.innerHTML = '';
+  state.time = '';
+  if (!state.date) { slotGrid.innerHTML = '<div class="slot empty">Спершу оберіть дату</div>'; update(); return; }
+  const d = new Date(state.date + 'T00:00:00');
+  if (!CONFIG.workDays.includes(d.getDay())) {
+    slotGrid.innerHTML = '<div class="slot empty">Цього дня не працюємо — оберіть інший</div>';
+    update(); return;
+  }
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  const minMin = isToday ? now.getHours() * 60 + now.getMinutes() + 60 : 0; // мін. за 1 год
+  const step = CONFIG.slotStepMin;
+  for (let m = CONFIG.workHours.from * 60; m <= CONFIG.workHours.to * 60 - step; m += step) {
+    if (m < minMin) continue;
+    const t = String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
+    const slot = document.createElement('div');
+    slot.className = 'slot'; slot.textContent = t;
+    slot.onclick = () => {
+      slotGrid.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+      slot.classList.add('selected'); state.time = t; update();
+    };
+    slotGrid.appendChild(slot);
+  }
+  if (!slotGrid.children.length) slotGrid.innerHTML = '<div class="slot empty">На цей день вільних слотів немає</div>';
+  update();
+}
+dateEl.addEventListener('change', () => { state.date = dateEl.value; renderSlots(); });
+
+['name','contact','wishes'].forEach(id =>
+  document.getElementById(id).addEventListener('input', e => { state[id] = e.target.value; update(); })
+);
+
+/* ─── підсумок ─── */
+function fmtDur(min) {
+  const h = Math.floor(min/60), m = min%60;
+  return (h ? h + ' год ' : '') + (m ? m + ' хв' : '').trim() || h + ' год';
+}
+function totals() {
+  let price = 0, dur = 0;
+  state.services.forEach(n => { price += CONFIG.services[n].price; dur += CONFIG.services[n].min; });
+  return { price, dur };
+}
+function update() {
+  const sum = document.getElementById('summary');
+  if (!state.services.length) {
+    sum.innerHTML = '<div class="empty">Оберіть послуги вище — тут зʼявиться підсумок.</div>';
+  } else {
+    const { price, dur } = totals();
+    let rows = state.services.map(n => `<div class="row"><span>${n}</span><span>${CONFIG.services[n].price} грн</span></div>`).join('');
+    if (state.date) rows += `<div class="row"><span>Дата</span><span>${state.date}${state.time ? ', ' + state.time : ''}</span></div>`;
+    rows += `<div class="row"><span>Орієнтовна тривалість</span><span>~${fmtDur(dur)}</span></div>`;
+    rows += `<div class="row total"><span>Разом</span><span>${price} грн</span></div>`;
+    sum.innerHTML = rows;
+  }
+  const ready = state.services.length && state.date && state.time && state.name.trim() && state.contact.trim();
+  document.getElementById('submit').disabled = !ready;
+}
+
+document.getElementById('submit').addEventListener('click', () => {
+  const { price, dur } = totals();
+  const lines = [];
+  lines.push(`✨ Запис: ${CONFIG.businessName}`);
+  lines.push('');
+  lines.push('💆 Послуги:');
+  state.services.forEach(n => lines.push(`• ${n} — ${CONFIG.services[n].price} грн`));
+  lines.push('');
+  lines.push(`📅 Дата: ${state.date}`);
+  lines.push(`🕐 Час: ${state.time}`);
+  lines.push(`⏱ Тривалість: ~${fmtDur(dur)}`);
+  lines.push(`💰 Разом: ${price} грн`);
+  lines.push('');
+  lines.push(`👤 Ім'я: ${state.name}`);
+  lines.push(`📞 Контакт: ${state.contact}`);
+  if (state.wishes.trim()) lines.push(`📝 Побажання: ${state.wishes.trim()}`);
+  const url = `https://t.me/${CONFIG.telegram}?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank');
+});
+
+update();
+</script>
+</body>
+</html>

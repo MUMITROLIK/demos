@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf8f4">
+<title>Студія квітів · Замовлення букета</title>
+
+<meta property="og:title" content="Студія квітів · Авторські букети з доставкою">
+<meta property="og:description" content="Оберіть букет, розмір і час доставки — замовлення оформиться в Telegram за хвилину.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=1200&q=80">
+<meta property="og:type" content="website">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E💐%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!--
+  НАЛАШТУВАННЯ ПІД КЛІЄНТА — лише блок CONFIG:
+  1. telegram      — @username флориста (без @)
+  2. businessName  — назва студії
+  3. tagline       — короткий підпис
+  4. city          — місто
+  5. bouquets      — букети: фото, опис, ціни за розмір (S/M/L)
+  6. deliveryWindows — інтервали доставки
+-->
+<script>
+const CONFIG = {
+  telegram: "petal_flowers_demo",
+  businessName: "Petal",
+  tagline: "Авторська квіткова студія",
+  city: "Київ",
+  bouquets: {
+    "Ніжний ранок":    { img:"https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=700&q=80", desc:"Піони, ранункулюси, евкаліпт", sizes:{ "S":750, "M":1100, "L":1600 } },
+    "Польова свобода": { img:"https://images.unsplash.com/photo-1487070183336-b863922373d4?w=700&q=80", desc:"Польові квіти, ромашки, лаванда", sizes:{ "S":650, "M":950, "L":1400 } },
+    "Класична троянда":{ img:"https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=700&q=80", desc:"Преміум-троянди, зелень", sizes:{ "S":900, "M":1300, "L":1900 } },
+    "Сонячний настрій":{ img:"https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=700&q=80", desc:"Соняхи, хризантеми, статиця", sizes:{ "S":700, "M":1000, "L":1500 } }
+  },
+  deliveryWindows: ["09:00–12:00", "12:00–15:00", "15:00–18:00", "18:00–21:00"],
+  sizeLabels: { "S":"Компактний", "M":"Середній", "L":"Розкішний" }
+};
+</script>
+
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --ivory:#fbf8f4;
+  --cream:#f5ece4;
+  --blush:#f1ddd8;
+  --paper:#ffffff;
+  --ink:#322a30;
+  --ink-soft:#5b4f57;
+  --plum:#8a5868;
+  --plum-deep:#6f4453;
+  --sage:#9caa92;
+  --muted:#a2959b;
+  --line:#ece0d8;
+  --shadow:0 24px 60px -28px rgba(80,52,64,.35);
+  --shadow-sm:0 10px 26px -14px rgba(80,52,64,.30);
+  --r:20px;
+}
+html { scroll-behavior:smooth; }
+body { font-family:'Jost',sans-serif; color:var(--ink); background:var(--ivory); line-height:1.65; font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+.serif { font-family:'Playfair Display',serif; font-weight:500; }
+.wrap { width:min(1120px,92%); margin:0 auto; }
+.eyebrow { font-size:12px; letter-spacing:.26em; text-transform:uppercase; color:var(--plum); }
+
+.btn { font-family:'Jost',sans-serif; font-weight:500; font-size:14px; letter-spacing:.02em; border:none; cursor:pointer; border-radius:999px; padding:13px 28px; text-decoration:none; display:inline-block; background:var(--plum); color:#fff; transition:transform .2s cubic-bezier(.2,.7,.2,1), box-shadow .2s, background .2s; }
+.btn:hover { transform:translateY(-2px); box-shadow:0 14px 30px -12px rgba(138,88,104,.55); background:var(--plum-deep); }
+.btn-ghost { background:transparent; color:var(--ink); border:1px solid var(--ink); }
+.btn-ghost:hover { background:var(--ink); color:#fff; }
+.btn[disabled] { opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* DEMO */
+.demo-bar { background:var(--plum-deep); color:#fbeef0; text-align:center; font-size:12.5px; letter-spacing:.05em; padding:7px 12px; }
+
+/* Reveal-анімація */
+.reveal { opacity:0; transform:translateY(26px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+
+/* Хедер */
+header { position:sticky; top:0; z-index:50; transition:background .35s, box-shadow .35s, padding .35s; padding:18px 0; }
+header.scrolled { background:rgba(251,248,244,.86); backdrop-filter:blur(12px); box-shadow:0 1px 0 var(--line); padding:10px 0; }
+.nav { display:flex; align-items:center; justify-content:space-between; }
+.brand { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; display:flex; align-items:center; gap:10px; }
+.brand .dot { font-size:20px; }
+.nav-links { display:flex; gap:30px; font-size:14px; }
+.nav-links a { color:var(--ink-soft); text-decoration:none; position:relative; }
+.nav-links a::after { content:""; position:absolute; left:0; bottom:-4px; width:0; height:1.5px; background:var(--plum); transition:width .25s; }
+.nav-links a:hover::after { width:100%; }
+
+/* Герой */
+.hero { display:grid; grid-template-columns:1.02fr .98fr; gap:50px; align-items:center; padding:50px 0 70px; }
+.hero h1 { font-family:'Playfair Display',serif; font-weight:600; font-size:clamp(40px,6vw,68px); line-height:1.04; }
+.hero h1 em { font-style:italic; color:var(--plum); }
+.hero p.lead { color:var(--ink-soft); font-size:18px; margin:22px 0 32px; max-width:44ch; }
+.hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
+.hero-art { position:relative; }
+.hero-art .photo { width:100%; height:520px; object-fit:cover; border-radius:200px 200px 26px 26px; box-shadow:var(--shadow); }
+.blob { position:absolute; border-radius:50%; filter:blur(4px); opacity:.6; z-index:-1; }
+.blob.b1 { width:220px; height:220px; background:var(--blush); top:-30px; right:-30px; animation:float1 9s ease-in-out infinite; }
+.blob.b2 { width:160px; height:160px; background:#e7efe2; bottom:10px; left:-40px; animation:float2 11s ease-in-out infinite; }
+.petal { position:absolute; font-size:26px; opacity:.9; animation:drift 12s linear infinite; }
+@keyframes float1 { 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(0,-22px); } }
+@keyframes float2 { 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(0,18px); } }
+@keyframes drift { 0%{ transform:translateY(-10px) rotate(0); opacity:0; } 10%{opacity:.9;} 100%{ transform:translateY(120px) rotate(180deg); opacity:0; } }
+
+/* Hero entrance */
+.hero .col-text > * { opacity:0; transform:translateY(20px); animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero .col-text > *:nth-child(1){ animation-delay:.05s; }
+.hero .col-text > *:nth-child(2){ animation-delay:.18s; }
+.hero .col-text > *:nth-child(3){ animation-delay:.30s; }
+.hero .col-text > *:nth-child(4){ animation-delay:.42s; }
+.hero-art { opacity:0; animation:rise 1s cubic-bezier(.2,.7,.2,1) .25s forwards; }
+@keyframes rise { to{ opacity:1; transform:none; } }
+
+/* Секції */
+section.block { padding:64px 0; }
+.sec-head { max-width:60ch; margin-bottom:36px; }
+.sec-head h2 { font-family:'Playfair Display',serif; font-weight:600; font-size:clamp(28px,3.8vw,42px); margin-top:12px; }
+.sec-head p { color:var(--ink-soft); margin-top:10px; }
+
+/* Колекція */
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:22px; }
+.card { background:var(--paper); border-radius:var(--r); overflow:hidden; cursor:pointer; box-shadow:var(--shadow-sm); transition:transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s; border:1px solid transparent; }
+.card:hover { transform:translateY(-6px); box-shadow:var(--shadow); }
+.card.on { border-color:var(--plum); box-shadow:0 0 0 2px var(--plum), var(--shadow); }
+.card .imgwrap { overflow:hidden; height:230px; }
+.card img { width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.7,.2,1); }
+.card:hover img { transform:scale(1.07); }
+.card .body { padding:16px 18px 18px; }
+.card h3 { font-family:'Playfair Display',serif; font-weight:600; font-size:20px; }
+.card .desc { color:var(--muted); font-size:13.5px; margin:4px 0 12px; min-height:38px; }
+.card .from { display:flex; align-items:baseline; justify-content:space-between; }
+.card .from .price { font-family:'Playfair Display',serif; font-size:19px; color:var(--plum); }
+.card .from .pick-lbl { font-size:13px; color:var(--sage); }
+
+/* Як працює */
+.how { background:var(--cream); border-radius:30px; padding:48px; }
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:30px; }
+.step .n { font-family:'Playfair Display',serif; font-size:34px; color:var(--plum); font-style:italic; }
+.step h4 { font-family:'Playfair Display',serif; font-size:19px; margin:6px 0; }
+.step p { color:var(--ink-soft); font-size:14px; }
+
+/* Замовлення */
+.order { background:var(--paper); border-radius:30px; padding:42px; box-shadow:var(--shadow); }
+.order-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:38px; }
+.preview { background:var(--cream); border-radius:var(--r); padding:8px; position:sticky; top:90px; }
+.preview img { width:100%; height:300px; object-fit:cover; border-radius:14px; }
+.preview .pv-body { padding:14px 12px 8px; }
+.preview .pv-body h3 { font-family:'Playfair Display',serif; font-size:22px; }
+.preview .pv-empty { height:300px; display:grid; place-items:center; color:var(--muted); text-align:center; padding:20px; }
+
+.step-label { font-size:13px; letter-spacing:.05em; color:var(--plum); text-transform:uppercase; margin-bottom:11px; }
+.o-step { margin-bottom:24px; }
+.pills { display:flex; gap:10px; flex-wrap:wrap; }
+.pill { border:1px solid var(--line); background:var(--ivory); border-radius:12px; padding:11px 16px; cursor:pointer; transition:.18s; font-size:14px; }
+.pill:hover { border-color:var(--plum); }
+.pill.on { border-color:var(--plum); background:#fff; color:var(--plum); box-shadow:0 0 0 1px var(--plum); font-weight:500; }
+.pill b { font-family:'Playfair Display',serif; }
+.pill .muted { color:var(--muted); font-size:12.5px; margin-left:6px; }
+
+.fields { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.field { display:flex; flex-direction:column; }
+.field.full { grid-column:1/-1; }
+.field label { font-size:13px; color:var(--ink-soft); margin-bottom:6px; }
+.field input, .field textarea { font-family:'Jost'; font-size:15px; color:var(--ink); background:var(--ivory); border:1px solid var(--line); border-radius:11px; padding:12px 14px; }
+.field input:focus, .field textarea:focus { outline:none; border-color:var(--plum); }
+.field textarea { resize:vertical; min-height:62px; }
+
+.total-bar { display:flex; align-items:center; justify-content:space-between; padding:18px 2px 4px; border-top:1px dashed var(--line); margin-top:6px; }
+.total-bar .lbl { color:var(--ink-soft); font-size:14px; }
+.total-bar .val { font-family:'Playfair Display',serif; font-size:26px; color:var(--plum); }
+.order .btn { width:100%; margin-top:14px; padding:15px; font-size:15px; }
+.hint { text-align:center; font-size:12.5px; color:var(--muted); margin-top:10px; }
+
+footer { background:var(--ink); color:#e3d8dd; padding:48px 0; margin-top:30px; }
+.foot { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.foot .serif { color:#fff; font-size:22px; }
+.foot a { color:#f0c9d3; text-decoration:none; }
+
+@media (max-width:880px){
+  .hero { grid-template-columns:1fr; gap:30px; padding:30px 0 50px; }
+  .hero-art .photo { height:380px; border-radius:140px 140px 22px 22px; }
+  .nav-links { display:none; }
+  .order-grid { grid-template-columns:1fr; gap:24px; }
+  .preview { position:static; }
+  .fields { grid-template-columns:1fr; }
+  .how { padding:30px 22px; }
+  .order { padding:24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">💐 ДЕМО-сторінка — приклад сайту замовлення квітів. Дані налаштовуються під вас.</div>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <div class="brand"><span class="dot">💐</span><span id="brand-name">Petal</span></div>
+    <nav class="nav-links">
+      <a href="#collection">Колекція</a>
+      <a href="#how">Як це працює</a>
+      <a href="#order">Замовити</a>
+    </nav>
+    <a href="#order" class="btn">Замовити букет</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="col-text">
+      <div class="eyebrow" id="hero-eyebrow">Авторська квіткова студія · Київ</div>
+      <h1 class="serif">Квіти, що говорять <em>замість слів</em></h1>
+      <p class="lead">Оберіть букет, розмір і зручний час доставки. Замовлення оформиться в Telegram за хвилину — ми зберемо все свіжим того ж дня.</p>
+      <div class="hero-cta">
+        <a href="#collection" class="btn">Обрати букет →</a>
+        <a href="#how" class="btn btn-ghost">Як це працює</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <span class="blob b1"></span>
+      <span class="blob b2"></span>
+      <span class="petal" style="left:12%;top:0;animation-delay:0s">🌸</span>
+      <span class="petal" style="left:60%;top:-10px;animation-delay:3s">🌷</span>
+      <span class="petal" style="left:85%;top:20px;animation-delay:6s">🌼</span>
+      <img class="photo" id="hero-img" src="" alt="Букет">
+    </div>
+  </section>
+
+  <section class="block" id="collection">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Колекція</div>
+      <h2 class="serif">Оберіть букет</h2>
+      <p>Натисніть на букет, щоб додати до замовлення — далі оберете розмір і доставку.</p>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section class="block">
+    <div class="how reveal">
+      <div class="sec-head" style="margin-bottom:26px;">
+        <div class="eyebrow">Просто</div>
+        <h2 class="serif">Як це працює</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h4>Обираєте букет</h4><p>Колекція або індивідуальне побажання у коментарі.</p></div>
+        <div class="step"><div class="n">02</div><h4>Час доставки</h4><p>Зручний день та інтервал — привеземо вчасно.</p></div>
+        <div class="step"><div class="n">03</div><h4>Підтвердження в Telegram</h4><p>Деталі та оплата — у зручному чаті, без дзвінків.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="order">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Замовлення</div>
+      <h2 class="serif">Оформіть доставку</h2>
+    </div>
+    <div class="order reveal">
+      <div class="order-grid">
+        <div class="preview" id="preview">
+          <div class="pv-empty">Оберіть букет із колекції вище — він зʼявиться тут 🌷</div>
+        </div>
+        <div>
+          <div class="o-step">
+            <p class="step-label">Розмір букета</p>
+            <div class="pills" id="size-pills"><span style="color:var(--muted);font-size:14px;">Спершу оберіть букет</span></div>
+          </div>
+          <div class="o-step">
+            <p class="step-label">Дата доставки</p>
+            <div class="field" style="max-width:260px;"><input type="date" id="date"></div>
+          </div>
+          <div class="o-step">
+            <p class="step-label">Інтервал доставки</p>
+            <div class="pills" id="time-pills"></div>
+          </div>
+          <div class="o-step">
+            <p class="step-label">Кому доставити</p>
+            <div class="fields">
+              <div class="field"><label>Ім'я отримувача</label><input type="text" id="rname" placeholder="Напр., Марія"></div>
+              <div class="field"><label>Телефон отримувача</label><input type="text" id="rphone" placeholder="+380…"></div>
+              <div class="field full"><label>Адреса доставки</label><input type="text" id="addr" placeholder="Місто, вулиця, будинок, квартира"></div>
+            </div>
+          </div>
+          <div class="o-step">
+            <p class="step-label">Ваші дані та листівка</p>
+            <div class="fields">
+              <div class="field full"><label>Ваш контакт (телефон / @telegram)</label><input type="text" id="contact" placeholder="+380… або @nickname"></div>
+              <div class="field full"><label>Текст листівки (необов'язково)</label><textarea id="cardtext" placeholder="З любов'ю… ✿"></textarea></div>
+            </div>
+          </div>
+          <div class="total-bar"><span class="lbl" id="total-lbl">Оберіть букет і розмір</span><span class="val" id="total-val">—</span></div>
+          <button class="btn" id="submit" disabled>Оформити замовлення в Telegram</button>
+          <div class="hint">Кнопка відкриє чат із флористом із готовим замовленням.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="serif" id="foot-name">Petal</div>
+      <div style="font-size:14px;margin-top:4px;" id="foot-tagline">Авторська квіткова студія</div>
+    </div>
+    <div style="font-size:14px;">Telegram: <a id="footer-tg" href="#">замовити</a> · <span id="foot-city">Київ</span></div>
+  </div>
+</footer>
+
+<script>
+/* CONFIG → текст */
+const firstB = Object.values(CONFIG.bouquets)[0];
+document.getElementById('hero-img').src = firstB.img;
+document.getElementById('brand-name').textContent = CONFIG.businessName;
+document.getElementById('foot-name').textContent  = CONFIG.businessName;
+document.getElementById('foot-tagline').textContent = CONFIG.tagline;
+document.getElementById('foot-city').textContent  = CONFIG.city;
+document.getElementById('hero-eyebrow').textContent = CONFIG.tagline + ' · ' + CONFIG.city;
+document.getElementById('footer-tg').href = 'https://t.me/' + CONFIG.telegram;
+document.title = CONFIG.businessName + ' · Замовлення букета';
+
+const state = { bouquet:'', size:'', price:0, date:'', time:'', rname:'', rphone:'', addr:'', contact:'', cardtext:'' };
+
+/* Колекція */
+const cardsEl = document.getElementById('cards');
+Object.entries(CONFIG.bouquets).forEach(([name,b], i)=>{
+  const minP = Math.min(...Object.values(b.sizes));
+  const el = document.createElement('div');
+  el.className = 'card reveal'; el.dataset.name = name; el.style.transitionDelay = (i*0.08)+'s';
+  el.innerHTML = `<div class="imgwrap"><img src="${b.img}" alt="${name}"></div>
+    <div class="body"><h3>${name}</h3><div class="desc">${b.desc||''}</div>
+    <div class="from"><span class="price">від ${minP} грн</span><span class="pick-lbl">обрати →</span></div></div>`;
+  el.onclick = ()=>selectBouquet(name);
+  cardsEl.appendChild(el);
+});
+
+function selectBouquet(name){
+  state.bouquet = name; state.size=''; state.price=0;
+  cardsEl.querySelectorAll('.card').forEach(c=>c.classList.toggle('on', c.dataset.name===name));
+  const b = CONFIG.bouquets[name];
+  document.getElementById('preview').innerHTML =
+    `<img src="${b.img}" alt="${name}"><div class="pv-body"><h3>${name}</h3>
+     <div style="color:var(--muted);font-size:13.5px;margin-top:2px;">${b.desc||''}</div></div>`;
+  renderSizes(); update();
+  document.getElementById('order').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* Розмір */
+const sizePills = document.getElementById('size-pills');
+function renderSizes(){
+  sizePills.innerHTML = '';
+  if(!state.bouquet){ sizePills.innerHTML = '<span style="color:var(--muted);font-size:14px;">Спершу оберіть букет</span>'; return; }
+  const sizes = CONFIG.bouquets[state.bouquet].sizes;
+  Object.entries(sizes).forEach(([sz,price])=>{
+    const p = document.createElement('div');
+    p.className = 'pill';
+    const lbl = (CONFIG.sizeLabels && CONFIG.sizeLabels[sz]) ? CONFIG.sizeLabels[sz] : sz;
+    p.innerHTML = `<b>${lbl}</b><span class="muted">${price} грн</span>`;
+    p.onclick = ()=>{ state.size=sz; state.price=price; sizePills.querySelectorAll('.pill').forEach(x=>x.classList.remove('on')); p.classList.add('on'); update(); };
+    sizePills.appendChild(p);
+  });
+}
+
+/* Дата */
+const dateEl = document.getElementById('date');
+const today = new Date();
+dateEl.min = today.toISOString().split('T')[0];
+const maxD = new Date(); maxD.setDate(maxD.getDate()+30);
+dateEl.max = maxD.toISOString().split('T')[0];
+dateEl.addEventListener('change', ()=>{ state.date=dateEl.value; update(); });
+
+/* Інтервал */
+const timePills = document.getElementById('time-pills');
+CONFIG.deliveryWindows.forEach(w=>{
+  const p = document.createElement('div'); p.className='pill'; p.textContent=w;
+  p.onclick = ()=>{ state.time=w; timePills.querySelectorAll('.pill').forEach(x=>x.classList.remove('on')); p.classList.add('on'); update(); };
+  timePills.appendChild(p);
+});
+
+['rname','rphone','addr','contact','cardtext'].forEach(id =>
+  document.getElementById(id).addEventListener('input', e=>{ state[id]=e.target.value; update(); })
+);
+
+function update(){
+  const lbl = document.getElementById('total-lbl');
+  const val = document.getElementById('total-val');
+  if(state.bouquet && state.size){
+    const szLbl = (CONFIG.sizeLabels && CONFIG.sizeLabels[state.size]) ? CONFIG.sizeLabels[state.size] : state.size;
+    lbl.textContent = `${state.bouquet} · ${szLbl}` + (state.date ? ` · ${state.date}${state.time? ', '+state.time:''}` : '');
+    val.textContent = state.price + ' грн';
+  } else { lbl.textContent = 'Оберіть букет і розмір'; val.textContent = '—'; }
+  const ready = state.bouquet && state.size && state.date && state.time && state.rname.trim() && state.rphone.trim() && state.addr.trim() && state.contact.trim();
+  document.getElementById('submit').disabled = !ready;
+}
+
+document.getElementById('submit').addEventListener('click', ()=>{
+  const szLbl = (CONFIG.sizeLabels && CONFIG.sizeLabels[state.size]) ? CONFIG.sizeLabels[state.size] : state.size;
+  const lines = [];
+  lines.push(`💐 Замовлення: ${CONFIG.businessName}`);
+  lines.push('');
+  lines.push(`🌷 Букет: ${state.bouquet} (${szLbl})`);
+  lines.push(`💰 Вартість: ${state.price} грн`);
+  lines.push(`📅 Доставка: ${state.date}, ${state.time}`);
+  lines.push('');
+  lines.push(`🎁 Отримувач: ${state.rname}, ${state.rphone}`);
+  lines.push(`📍 Адреса: ${state.addr}`);
+  lines.push(`📞 Ваш контакт: ${state.contact}`);
+  if(state.cardtext.trim()) lines.push(`✍️ Листівка: «${state.cardtext.trim()}»`);
+  const url = `https://t.me/${CONFIG.telegram}?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank');
+});
+
+/* Анімації появи при скролі */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold:0.12 });
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* Хедер при скролі */
+const hdr = document.getElementById('hdr');
+const onScroll = ()=> hdr.classList.toggle('scrolled', window.scrollY > 40);
+window.addEventListener('scroll', onScroll, { passive:true }); onScroll();
+</script>
+</body>
+</html>
