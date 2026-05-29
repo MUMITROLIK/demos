@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14110f">
+<title>IRON BLADE · Барбершоп</title>
+<meta property="og:title" content="IRON BLADE · Barbershop">
+<meta property="og:description" content="Чоловічі стрижки, борода, гоління небезпечною. Онлайн-запис до свого майстра.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='82' font-size='80'%3E💈%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+const CONFIG = {
+  telegram: "iron_blade_barber",
+  businessName: "IRON BLADE",
+  tagline: "Барбершоп для тих, хто знає чого хоче",
+  city: "Львів",
+  barbers: [
+    { name: "Андрій",  tag: "founder · фейд-майстер", emoji:"🪒" },
+    { name: "Макс",    tag: "борода · контур",        emoji:"✂️" },
+    { name: "Тарас",   tag: "класика · небезпечна",   emoji:"💈" }
+  ],
+  services: {
+    "Чоловіча стрижка":        { price: 350, min: 45 },
+    "Стрижка + борода":        { price: 500, min: 70 },
+    "Корекція бороди":         { price: 250, min: 30 },
+    "Гоління небезпечною":      { price: 300, min: 40 },
+    "Камуфляж сивини":          { price: 280, min: 30 },
+    "Бритьє голови":            { price: 300, min: 35 }
+  },
+  workHours: { from: 10, to: 21 },
+  slotStepMin: 45,
+  workDays: [1,2,3,4,5,6,0]
+};
+</script>
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#14110f; --bg2:#1d1815; --panel:#211b17; --ink:#f2ebe2; --ink-soft:#9a8f82;
+  --red:#d6402f; --red-deep:#a82a1c; --steel:#7d8a93; --gold:#c89b53;
+  --line:#322a24;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+::selection{background:var(--red);color:#fff}
+h1,h2,h3,.bebas{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.02em;line-height:.95}
+.cond{font-family:'Barlow Condensed',sans-serif}
+
+/* barber pole accent line */
+.pole{height:6px;background:repeating-linear-gradient(115deg,var(--red) 0 14px,#fff 14px 28px,#1f6fb0 28px 42px,#fff 42px 56px);background-size:112px 100%;animation:roll 2.4s linear infinite}
+@keyframes roll{to{background-position:112px 0}}
+
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+/* HERO */
+.hero{position:relative;min-height:96vh;min-height:96dvh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+  background:radial-gradient(circle at 78% 22%,#2a211b 0,var(--bg) 60%)}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:46px 46px;opacity:.35;mask:radial-gradient(circle at 50% 50%,#000,transparent 75%)}
+.hero .inner{position:relative;z-index:2;padding:90px 0}
+.tagline-top{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.4em;text-transform:uppercase;color:var(--red);margin-bottom:24px;opacity:0;animation:slin .7s .1s forwards}
+.hero h1{font-size:clamp(72px,21vw,210px);color:var(--ink);text-transform:uppercase;margin-bottom:6px;opacity:0;animation:slin .9s .25s forwards;text-shadow:0 0 50px rgba(0,0,0,.6)}
+.hero h1 .o{-webkit-text-stroke:2px var(--red);-webkit-text-fill-color:transparent;color:transparent}
+.hero .sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(18px,4vw,26px);font-weight:500;color:var(--ink-soft);max-width:560px;margin-bottom:38px;opacity:0;animation:slin .9s .4s forwards}
+.hero .acts{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:slin .9s .55s forwards}
+.btn{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:17px;letter-spacing:.1em;text-transform:uppercase;padding:15px 30px;border-radius:3px;cursor:pointer;border:2px solid var(--red);transition:.2s;text-decoration:none;display:inline-block}
+.btn.fill{background:var(--red);color:#fff}
+.btn.fill:hover{background:var(--red-deep);border-color:var(--red-deep);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@keyframes slin{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.pole.hero-pole{position:absolute;bottom:0;left:0;right:0;z-index:3}
+
+.reveal{opacity:0;transform:translateY(40px);transition:.8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* stats band */
+.band{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:4px;margin:80px 0 110px;background:var(--bg2)}
+@media(max-width:680px){.band{grid-template-columns:repeat(2,1fr)}}
+.band div{padding:30px 18px;text-align:center;border-right:1px solid var(--line)}
+.band div:last-child{border-right:none}
+@media(max-width:680px){.band div:nth-child(2){border-right:none}.band div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+.band .n{font-family:'Bebas Neue',sans-serif;font-size:50px;color:var(--red)}
+.band .t{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--ink-soft)}
+
+/* section heads */
+.shead{display:flex;align-items:baseline;gap:16px;margin-bottom:34px}
+.shead h2{font-size:clamp(40px,8vw,72px);text-transform:uppercase}
+.shead .idx{font-family:'Barlow Condensed',sans-serif;color:var(--red);font-weight:700;font-size:18px;letter-spacing:.1em}
+.shead .ln{flex:1;height:1px;background:var(--line)}
+
+/* BOOKING */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:clamp(20px,5vw,42px);margin-bottom:110px}
+.field{margin-bottom:34px}
+.lab{font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:14px;color:var(--steel);display:block;margin-bottom:16px}
+.lab .r{color:var(--red)}
+
+/* barber select */
+.barbers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:560px){.barbers{grid-template-columns:1fr}}
+.barber{position:relative;padding:22px 16px;border:1px solid var(--line);border-radius:5px;cursor:pointer;text-align:center;transition:.2s;background:var(--bg2);overflow:hidden}
+.barber:hover{border-color:var(--steel)}
+.barber input{position:absolute;opacity:0}
+.barber .av{font-size:38px;margin-bottom:8px;display:block}
+.barber .bn{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em}
+.barber .bt{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em}
+.barber:has(input:checked){border-color:var(--red);background:#251a16}
+.barber:has(input:checked)::after{content:'✓';position:absolute;top:8px;right:11px;color:var(--red);font-weight:700}
+.barber:has(input:checked)::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--red)}
+
+/* services */
+.svc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.svc{grid-template-columns:1fr}}
+.svc label{display:flex;align-items:center;gap:13px;padding:15px 16px;border:1px solid var(--line);border-radius:5px;cursor:pointer;background:var(--bg2);transition:.18s}
+.svc label:hover{border-color:var(--steel)}
+.svc input{appearance:none;width:20px;height:20px;border:2px solid var(--steel);border-radius:3px;flex-shrink:0;position:relative;transition:.15s}
+.svc input:checked{background:var(--red);border-color:var(--red)}
+.svc input:checked::after{content:'';position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.svc label:has(input:checked){border-color:var(--red)}
+.svc .nm{flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:500;font-size:16px}
+.svc .pr{font-family:'Bebas Neue',sans-serif;font-size:21px;color:var(--gold)}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.row2{grid-template-columns:1fr}}
+input[type=text],input[type=date]{width:100%;padding:14px 16px;background:var(--bg2);border:1px solid var(--line);border-radius:4px;color:var(--ink);font-family:'Barlow',sans-serif;font-size:16px;transition:.2s}
+input:focus{outline:none;border-color:var(--red)}
+input::placeholder{color:#6b6258}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.6);cursor:pointer}
+
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:8px}
+.slot{padding:13px 4px;text-align:center;border:1px solid var(--line);border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:16px;color:var(--ink-soft);background:var(--bg2);transition:.15s}
+.slot:hover{border-color:var(--steel);color:var(--ink)}
+.slot.sel{background:var(--red);color:#fff;border-color:var(--red)}
+.slot.empty{grid-column:1/-1;border:none;background:none;color:#6b6258;cursor:default;font-family:'Barlow',sans-serif;font-size:14px}
+
+.total{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--line);border-bottom:2px solid var(--line);padding:24px 4px;margin:34px 0}
+.total .l{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:13px;color:var(--ink-soft)}
+.total .v{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--gold);line-height:.8}
+.total .h{font-size:13px;color:var(--ink-soft);margin-top:4px;font-family:'Barlow Condensed',sans-serif}
+
+.cta{width:100%;padding:20px;border:none;border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:.14em;text-transform:uppercase;background:var(--red);color:#fff;transition:.2s;position:relative;overflow:hidden}
+.cta:not(:disabled):hover{background:var(--red-deep);transform:translateY(-2px)}
+.cta:disabled{opacity:.3;cursor:not-allowed}
+.fine{text-align:center;color:#6b6258;font-size:13px;margin-top:15px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+
+footer{border-top:1px solid var(--line);padding:48px 22px 70px;text-align:center;color:var(--ink-soft);background:var(--bg2)}
+footer .ig{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);letter-spacing:.05em;margin-bottom:8px}
+footer a{color:var(--red);text-decoration:none;font-weight:600}
+.demo-tag{display:inline-block;margin-top:18px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#6b6258;border:1px solid var(--line);padding:5px 14px;border-radius:3px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap inner">
+    <div class="tagline-top" id="ttop">Barbershop · Місто · Since '19</div>
+    <h1><span id="bz1">IRON</span> <span class="o" id="bz2">BLADE</span></h1>
+    <p class="sub" id="sub">Чоловічі стрижки, борода й гоління небезпечною. Без поспіху, по-чоловічому, з характером.</p>
+    <div class="acts">
+      <a class="btn fill" href="#book">Записатись</a>
+      <a class="btn ghost" id="tgbtn" href="#" target="_blank">Написати в Telegram</a>
+    </div>
+  </div>
+  <div class="pole hero-pole"></div>
+</header>
+
+<div class="wrap">
+  <section class="band reveal">
+    <div><div class="n" id="s1">6</div><div class="t">послуг</div></div>
+    <div><div class="n" id="s2">3</div><div class="t">майстри</div></div>
+    <div><div class="n">10–21</div><div class="t">щодня</div></div>
+    <div><div class="n">5★</div><div class="t">рейтинг</div></div>
+  </section>
+
+  <section id="book" class="reveal">
+    <div class="shead"><span class="idx">01 /</span><h2>Запис</h2><span class="ln"></span></div>
+    <div class="panel">
+      <div class="field">
+        <span class="lab">Твій майстер <span class="r">*</span></span>
+        <div class="barbers" id="barbers"></div>
+      </div>
+      <div class="field">
+        <span class="lab">Послуга <span class="r">*</span></span>
+        <div class="svc" id="svc"></div>
+      </div>
+      <div class="field">
+        <div class="row2">
+          <div><span class="lab">Дата <span class="r">*</span></span><input type="date" id="date"></div>
+          <div><span class="lab">Час <span class="r">*</span></span><input type="text" id="timed" placeholder="оберіть нижче" readonly></div>
+        </div>
+      </div>
+      <div class="field">
+        <span class="lab">Вільні слоти</span>
+        <div class="slots" id="slots"></div>
+      </div>
+      <div class="field">
+        <div class="row2">
+          <div><span class="lab">Ім'я <span class="r">*</span></span><input type="text" id="name" placeholder="Як звертатись"></div>
+          <div><span class="lab">Telegram / телефон <span class="r">*</span></span><input type="text" id="contact" placeholder="@nick або +380..."></div>
+        </div>
+      </div>
+      <div class="total">
+        <div><div class="l">Разом</div><div class="h" id="hint">оберіть послугу</div></div>
+        <div class="v" id="price">—</div>
+      </div>
+      <button class="cta" id="cta" disabled>Записатись через Telegram</button>
+      <p class="fine">Відкриється Telegram з готовим повідомленням — лишиться натиснути «Відправити»</p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="ig" id="ig">IRON BLADE</div>
+  <div>@<span id="igh">iron_blade_barber</span></div>
+  Заявка приходить майстру миттєво. Питання — <a id="tg" href="#">напишіть у Telegram</a>.
+  <br><span class="demo-tag">Демо-сайт</span>
+</footer>
+
+<div class="pole" style="position:fixed;top:0;left:0;right:0;z-index:99"></div>
+
+<script>
+document.title=CONFIG.businessName+' · Барбершоп';
+const parts=CONFIG.businessName.split(' ');
+document.getElementById('bz1').textContent=parts[0]||CONFIG.businessName;
+document.getElementById('bz2').textContent=parts.slice(1).join(' ')||'';
+document.getElementById('ttop').textContent='Barbershop · '+CONFIG.city+" · Since '19";
+document.getElementById('sub').textContent=CONFIG.tagline?CONFIG.tagline:document.getElementById('sub').textContent;
+document.getElementById('s1').textContent=Object.keys(CONFIG.services).length;
+document.getElementById('s2').textContent=CONFIG.barbers.length;
+document.getElementById('ig').textContent=CONFIG.businessName;
+document.getElementById('igh').textContent=CONFIG.telegram;
+document.getElementById('tg').href=document.getElementById('tgbtn').href='https://t.me/'+CONFIG.telegram;
+
+let state={barber:'',svc:[],date:'',time:'',name:'',contact:''};
+const wd=CONFIG.workDays;
+function nextWork(d){const x=new Date(d);for(let i=0;i<14;i++){if(wd.includes(x.getDay()))return x;x.setDate(x.getDate()+1);}return x;}
+const iso=d=>d.toISOString().split('T')[0];
+const dateEl=document.getElementById('date');
+dateEl.min=iso(new Date());dateEl.value=iso(nextWork(new Date()));state.date=dateEl.value;
+
+// barbers
+const bEl=document.getElementById('barbers');
+CONFIG.barbers.forEach((b,i)=>{
+  const l=document.createElement('label');l.className='barber';
+  l.innerHTML=`<input type="radio" name="barber" value="${b.name}"><span class="av">${b.emoji}</span><span class="bn">${b.name}</span><span class="bt">${b.tag}</span>`;
+  bEl.appendChild(l);
+});
+bEl.addEventListener('change',e=>{state.barber=e.target.value;upd();});
+
+// services
+const svc=document.getElementById('svc');
+Object.entries(CONFIG.services).forEach(([n,s])=>{
+  const l=document.createElement('label');
+  l.innerHTML=`<input type="checkbox" data-p="${s.price}" data-m="${s.min}"><span class="nm">${n}</span><span class="pr">${s.price}</span>`;
+  svc.appendChild(l);
+});
+svc.addEventListener('change',()=>{state.svc=[...svc.querySelectorAll('input:checked')].map(i=>({name:i.closest('label').querySelector('.nm').textContent,price:+i.dataset.p,min:+i.dataset.m}));upd();});
+
+const slots=document.getElementById('slots');
+function renderSlots(){
+  slots.innerHTML='';state.time='';document.getElementById('timed').value='';
+  const d=new Date(state.date);
+  if(!wd.includes(d.getDay())){slots.innerHTML='<div class="slot empty">Цього дня зачинено — оберіть інший день</div>';upd();return;}
+  const{from,to}=CONFIG.workHours,step=CONFIG.slotStepMin;
+  const today=iso(d)===iso(new Date()),now=new Date().getHours()*60+new Date().getMinutes();
+  for(let m=from*60;m<to*60;m+=step){
+    if(today&&m<=now+60)continue;
+    const t=`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+    const el=document.createElement('div');el.className='slot';el.textContent=t;
+    el.onclick=()=>{slots.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');state.time=t;document.getElementById('timed').value=t;upd();};
+    slots.appendChild(el);
+  }
+  if(!slots.children.length)slots.innerHTML='<div class="slot empty">Вільних слотів немає — оберіть інший день</div>';
+}
+dateEl.onchange=()=>{state.date=dateEl.value;renderSlots();};
+['name','contact'].forEach(id=>document.getElementById(id).addEventListener('input',e=>{state[id]=e.target.value;upd();}));
+
+function upd(){
+  const price=state.svc.reduce((s,x)=>s+x.price,0),min=state.svc.reduce((s,x)=>s+x.min,0);
+  document.getElementById('price').textContent=price?price.toLocaleString('uk-UA'):'—';
+  const h=Math.floor(min/60),mm=min%60;
+  document.getElementById('hint').textContent=state.svc.length?`≈ ${h?h+' год ':''}${mm?mm+' хв':''} ₴`.replace('₴','· грн').trim():'оберіть послугу';
+  document.getElementById('cta').disabled=!(state.barber&&state.svc.length&&state.date&&state.time&&state.name.trim()&&state.contact.trim());
+}
+document.getElementById('cta').onclick=()=>{
+  const price=state.svc.reduce((s,x)=>s+x.price,0),min=state.svc.reduce((s,x)=>s+x.min,0);
+  const h=Math.floor(min/60),mm=min%60;
+  const L=['💈 Запис · '+CONFIG.businessName,'',`👤 ${state.name}`,`📞 ${state.contact}`,`🪒 Майстер: ${state.barber}`,`📅 ${state.date}  🕐 ${state.time}`,'','✂️ Послуги:'];
+  state.svc.forEach(s=>L.push(`  • ${s.name} — ${s.price} грн`));
+  L.push('',`⏱️ ≈ ${h?h+' год ':''}${mm?mm+' хв':''}`.trim(),`💰 ${price.toLocaleString('uk-UA')} грн`);
+  window.open(`https://t.me/${CONFIG.telegram}?text=${encodeURIComponent(L.join('\n'))}`,'_blank');
+};
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+renderSlots();upd();
+</script>
+</body>
+</html>
